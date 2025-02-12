@@ -1,2 +1,2 @@
 # task-simplyfi
-Hyperledger Fabric network &; Chaincode
+Hyperledger Fabric network and Chaincode
