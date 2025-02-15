@@ -1,0 +1,141 @@
+Organizations:
+  - &OrdererOrg
+    Name: OrdererOrg
+    ID: OrdererMSP
+    MSPDir: ../organizations/ordererOrganizations/sample.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('OrdererMSP.member')"
+      Writers:
+        Type: Signature
+        Rule: "OR('OrdererMSP.member')"
+      Admins:
+        Type: Signature
+        Rule: "OR('OrdererMSP.admin')"
+    OrdererEndpoints:
+      - orderer.sample.com:7050
+  - &Org1
+    Name: organization1MSP
+    ID: organization1MSP
+    MSPDir: ../organizations/peerOrganizations/organization1.sample.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('organization1MSP.admin', 'organization1MSP.peer', 'organization1MSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('organization1MSP.admin', 'organization1MSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('organization1MSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('organization1MSP.peer')"
+  - &Org2
+    Name: organization2MSP
+    ID: organization2MSP
+    MSPDir: ../organizations/peerOrganizations/organization2.sample.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('organization2MSP.admin', 'organization2MSP.peer', 'organization2MSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('organization2MSP.admin', 'organization2MSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('organization2MSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('organization2MSP.peer')"
+
+
+
+Capabilities:  
+  Channel: &ChannelCapabilities
+    V2_0: true
+  Orderer: &OrdererCapabilities
+    V2_0: true
+  Application: &ApplicationCapabilities
+    V2_5: true
+    
+Application: &ApplicationDefaults
+  Organizations:
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Admins"
+    LifecycleEndorsement:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Endorsement"
+    Endorsement:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Endorsement"
+  Capabilities:
+    <<: *ApplicationCapabilities
+
+Orderer: &OrdererDefaults
+  Addresses:
+    - orderer.sample.com:7050
+  BatchTimeout: 2s
+  BatchSize:
+    MaxMessageCount: 10
+    AbsoluteMaxBytes: 99 MB
+    PreferredMaxBytes: 512 KB
+  Organizations:
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Admins"
+    BlockValidation:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+
+Channel: &ChannelDefaults
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Admins"
+  Capabilities:
+    <<: *ChannelCapabilities
+
+Profiles:
+  TwoOrgsChannel:
+    <<: *ChannelDefaults
+    Orderer:
+      <<: *OrdererDefaults
+      OrdererType: etcdraft
+      EtcdRaft:
+        Consenters:
+          - Host: orderer.sample.com
+            Port: 7050
+            ClientTLSCert: ../organizations/ordererOrganizations/sample.com/orderers/orderer.sample.com/tls/server.crt
+            ServerTLSCert: ../organizations/ordererOrganizations/sample.com/orderers/orderer.sample.com/tls/server.crt
+      Organizations:
+        - *OrdererOrg
+      Capabilities: *OrdererCapabilities
+    Application:
+      <<: *ApplicationDefaults
+      Organizations:
+        - *Org1
+        - *Org2
+      Capabilities: *ApplicationCapabilities

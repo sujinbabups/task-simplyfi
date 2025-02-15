@@ -3,12 +3,12 @@
 const { Contract } = require('fabric-contract-api');
 
 class AssetTransfer extends Contract {
-
-    // Create an Asset - Only Admin can create assets
+    
+    //  Create an Asset - Only Admin can create assets
     async CreateAsset(ctx, id, owner, value) {
         const role = await this.getClientRole(ctx);
         if (role !== 'admin') {
-            throw new Error('Access denied: Only admin can create assets');
+            throw new Error('Access denied: Only admins can create assets');
         }
 
         const asset = {
@@ -21,7 +21,7 @@ class AssetTransfer extends Contract {
         return `Asset ${id} created successfully`;
     }
 
-    // Read an Asset - Auditors can read all assets, Users can only read their own
+    //  Read an Asset - Auditors can read all assets, Users can only read their own
     async ReadAsset(ctx, id) {
         const assetBytes = await ctx.stub.getState(id);
         if (!assetBytes || assetBytes.length === 0) {
@@ -58,19 +58,56 @@ class AssetTransfer extends Contract {
             if (result.done) break;
         }
 
-        return assets;
+        return JSON.stringify(assets);
     }
 
-    // Helper Function: Get Client Role from Identity
+    // Update an Asset - Only Admins can update assets
+    async UpdateAsset(ctx, id, newOwner, newValue) {
+        const role = await this.getClientRole(ctx);
+        if (role !== 'admin') {
+            throw new Error('Access denied: Only admins can update assets');
+        }
+
+        const assetBytes = await ctx.stub.getState(id);
+        if (!assetBytes || assetBytes.length === 0) {
+            throw new Error(`Asset ${id} not found`);
+        }
+
+        const asset = JSON.parse(assetBytes.toString());
+        asset.Owner = newOwner;
+        asset.Value = parseInt(newValue);
+
+        await ctx.stub.putState(id, Buffer.from(JSON.stringify(asset)));
+        return `Asset ${id} updated successfully`;
+    }
+
+    // Delete an Asset - Only Admins can delete assets
+    async DeleteAsset(ctx, id) {
+        const role = await this.getClientRole(ctx);
+        if (role !== 'admin') {
+            throw new Error('Access denied: Only admins can delete assets');
+        }
+
+        const assetBytes = await ctx.stub.getState(id);
+        if (!assetBytes || assetBytes.length === 0) {
+            throw new Error(`Asset ${id} not found`);
+        }
+
+        await ctx.stub.deleteState(id);
+        return `Asset ${id} deleted successfully`;
+    }
+
+    // Get Client Role from Identity
     async getClientRole(ctx) {
         const role = ctx.clientIdentity.getAttributeValue('role');
         if (!role) {
-            throw new Error('User role not found in identity attributes');
+            console.warn('⚠ No role found in identity attributes. Assigning "user" by default.');
+            return 'user'; // Default role for missing attributes
         }
         return role;
     }
 
-    // Helper Function: Get Client ID
+    // Get Client ID
     async getClientID(ctx) {
         return ctx.clientIdentity.getID();
     }

@@ -1,9 +1,8 @@
 
 'use strict';
 
-const AssetTransfer = require('./lib/assetChaincode');
+const AssetTransfer = require('./lib/assetChaincode.js');
 
 
-module.exports.AssetTransfer = AssetTransfer;
 
-module.exports.contracts = AssetTransfer;
+module.exports.contracts = [AssetTransfer];
