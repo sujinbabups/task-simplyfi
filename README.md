@@ -93,7 +93,7 @@ fabric-ca-client identity list --tls.certfiles organizations/fabric-ca/organizat
 
 ## 📜 License
 
-This project is licensed under the Apache License 2.0 - see the [LICENSE.MD](LICENSE) file for details.
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE.MD) file for details.
 
 ## 🤝 Contributing
 
