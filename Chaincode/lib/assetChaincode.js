@@ -4,7 +4,6 @@ const { Contract } = require('fabric-contract-api');
 
 class AssetTransfer extends Contract {
     
-    //  Create an Asset - Only Admin can create assets
     async CreateAsset(ctx, id, owner, value) {
         const role = await this.getClientRole(ctx);
         if (role !== 'admin') {
@@ -30,14 +29,15 @@ class AssetTransfer extends Contract {
 
         const asset = JSON.parse(assetBytes.toString());
         const role = await this.getClientRole(ctx);
-        const clientID = await this.getClientID(ctx);
+        const clientEnrollmentID = this.getClientEnrollmentID(ctx);
 
-        if (role === 'auditor' || asset.Owner === clientID) {
+        if (role === 'auditor' || asset.Owner === clientEnrollmentID) {
             return asset;
         } else {
             throw new Error('Access denied: You can only view your own assets');
         }
     }
+
 
     // Get All Assets - Only Auditors can view all assets
     async GetAllAssets(ctx) {
@@ -101,15 +101,15 @@ class AssetTransfer extends Contract {
     async getClientRole(ctx) {
         const role = ctx.clientIdentity.getAttributeValue('role');
         if (!role) {
-            console.warn('⚠ No role found in identity attributes. Assigning "user" by default.');
-            return 'user'; // Default role for missing attributes
+            console.warn('No role found in identity attributes. Assigning "user" by default.');
+            return 'user';
         }
         return role;
     }
 
     // Get Client ID
-    async getClientID(ctx) {
-        return ctx.clientIdentity.getID();
+    getClientEnrollmentID(ctx) {
+        return ctx.clientIdentity.getID().split("::")[1];
     }
 }
 

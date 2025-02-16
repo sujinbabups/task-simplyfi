@@ -1,7 +1,7 @@
 const { Gateway, Wallets } = require('fabric-network');
 const path = require('path');
 const fs = require('fs');
-const { profile } = require('./profile'); // Import the profile
+const { profile } = require('./profile'); 
 const gateway = new Gateway();
 
 class ClientApplication {
@@ -27,14 +27,14 @@ class ClientApplication {
             }
             
             // Load connection profile dynamically
-            const ccpPath = path.resolve(__dirname, '../Network/connection-org1.json'); 
+            const ccpPath = path.resolve(__dirname, '../../Network/connection-org1.json'); 
             const ccp = JSON.parse(fs.readFileSync(ccpPath, 'utf8'));
     
             // Declare and connect to Fabric Gateway
             const gateway = new Gateway();
             await gateway.connect(ccp, {
                 wallet,
-                identity: org,  
+                identity: org,  // Use dynamic identity
                 discovery: { enabled: true, asLocalhost: true }
             });
     

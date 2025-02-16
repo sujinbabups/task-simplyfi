@@ -13,8 +13,11 @@ async function importIdentity(userType, userName) {
         const certPath = path.join(credPath, 'signcerts/cert.pem');
         const keyPath = path.join(credPath, 'keystore');
 
-        if (!fs.existsSync(certPath) || !fs.existsSync(keyPath)) {
-            throw new Error(`Certificate or key directory for "${userType}" not found.`);
+        if (!fs.existsSync(certPath)) {
+            throw new Error(`Certificate file not found for "${userType}" at path: ${certPath}`);
+        }
+        if (!fs.existsSync(keyPath)) {
+            throw new Error(`Keystore directory not found for "${userType}" at path: ${keyPath}`);
         }
 
         const keyFiles = fs.readdirSync(keyPath);
@@ -23,8 +26,8 @@ async function importIdentity(userType, userName) {
         }
 
         const keyFile = path.join(keyPath, keyFiles[0]);
-        const certificate = fs.readFileSync(certPath).toString();
-        const privateKey = fs.readFileSync(keyFile).toString();
+        const certificate = fs.readFileSync(certPath, 'utf8');
+        const privateKey = fs.readFileSync(keyFile, 'utf8');
 
         const identity = {
             credentials: {
@@ -36,17 +39,20 @@ async function importIdentity(userType, userName) {
         };
 
         await wallet.put(identityLabel, identity);
-        console.log(`✅ Successfully imported "${identityLabel}" into the wallet.`);
+        console.log(`Successfully imported "${identityLabel}" into the wallet.`);
     } catch (error) {
-        console.error(`❌ Error importing identity "${userType}": ${error.message}`);
+        console.error(`Error importing identity "${userType}": ${error.message}`);
     }
 }
 
 async function main() {
-    console.log("🔄 Importing Admin and Auditor identities...");
-    await importIdentity("Admin", "organization1admin"); // Import Admin
-    await importIdentity("Auditor", "organization1auditor"); // Import Auditor
-    console.log("✅ All identities imported successfully.");
+    console.log("Importing Admin, Auditor, and User identities...");
+
+    await importIdentity("Admin", "organization1admin");   
+    await importIdentity("Auditor", "organization1auditor"); 
+    await importIdentity("User", "organization1user");                
+
+    console.log("All identities imported successfully.");
 }
 
 main().catch(console.error);
