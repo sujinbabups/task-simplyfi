@@ -1,7 +1,7 @@
 const { Gateway, Wallets } = require('fabric-network');
 const path = require('path');
 const fs = require('fs');
-const { profile } = require('./profile'); // Import the profile
+const { profile } = require('./profile'); 
 const gateway = new Gateway();
 
 class ClientApplication {
@@ -17,7 +17,6 @@ class ClientApplication {
                 throw new Error(`Organization profile for "${org}" not found.`);
             }
     
-            // Load wallet
             const wallet = await Wallets.newFileSystemWallet(this.walletPath);
     
             // Ensure user identity exists in the wallet
