@@ -26,17 +26,26 @@ class AssetTransfer extends Contract {
         if (!assetBytes || assetBytes.length === 0) {
             throw new Error(`Asset ${id} not found`);
         }
-
+    
         const asset = JSON.parse(assetBytes.toString());
         const role = await this.getClientRole(ctx);
-        const clientEnrollmentID = this.getClientEnrollmentID(ctx);
-
+        const clientEnrollmentID = ctx.clientIdentity.getAttributeValue('hf.EnrollmentID');
+        console.log(`Client Enrollment ID: ${clientEnrollmentID}`);
+        console.log(`Asset Owner: ${asset.Owner}`);
+            
+        console.log(`Asset ID: ${id}`);
+        console.log(` Asset Owner: ${asset.Owner}`);
+        console.log(`Current User ID: ${clientEnrollmentID}`);
+        console.log(`User Role: ${role}`);
+    
         if (role === 'auditor' || asset.Owner === clientEnrollmentID) {
             return asset;
         } else {
             throw new Error('Access denied: You can only view your own assets');
         }
     }
+    
+    
 
 
     // Get All Assets - Only Auditors can view all assets

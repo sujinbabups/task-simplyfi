@@ -180,8 +180,3 @@ sleep 1
 
 
 peer lifecycle chaincode querycommitted --channelID $CHANNEL_NAME --name Asset --cafile $ORDERER_CA
-
-
-
-#need to export this export FABRIC_CA_CLIENT_HOME="${PWD}/organizations/peerOrganizations/organization1.sample.com"
-#fabric-ca-client identity list --tls.certfiles "${PWD}/organizations/fabric-ca/organization1/ca-cert.pem"
