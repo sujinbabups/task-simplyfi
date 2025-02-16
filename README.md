@@ -103,11 +103,6 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENS
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 📞 Support
-
-For support and queries:
-- Create an [Issue](https://github.com/sujinbabups/task-simplify/issues)
-
 ## ✨ Acknowledgments
 
 - Hyperledger Fabric Community
