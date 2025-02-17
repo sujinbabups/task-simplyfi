@@ -122,7 +122,7 @@ echo "—---------------Join organization2 peer to the channel—-------------"
 peer channel join -b ${PWD}/channel-artifacts/$CHANNEL_NAME.block
 sleep 1
 peer channel list
-
+    
 echo "—-------------organization2 anchor peer update—-----------"
 
 peer channel fetch config ${PWD}/channel-artifacts/config_block.pb -o localhost:7050 --ordererTLSHostnameOverride orderer.sample.com -c $CHANNEL_NAME --tls --cafile $ORDERER_CA

@@ -3,7 +3,6 @@
 const { Contract } = require('fabric-contract-api');
 
 class AssetTransfer extends Contract {
-    
     async CreateAsset(ctx, id, owner, value) {
         const role = await this.getClientRole(ctx);
         if (role !== 'admin') {
@@ -30,22 +29,14 @@ class AssetTransfer extends Contract {
         const asset = JSON.parse(assetBytes.toString());
         const role = await this.getClientRole(ctx);
         const clientEnrollmentID = ctx.clientIdentity.getAttributeValue('hf.EnrollmentID');
-        console.log(`Client Enrollment ID: ${clientEnrollmentID}`);
-        console.log(`Asset Owner: ${asset.Owner}`);
-            
-        console.log(`Asset ID: ${id}`);
-        console.log(` Asset Owner: ${asset.Owner}`);
-        console.log(`Current User ID: ${clientEnrollmentID}`);
-        console.log(`User Role: ${role}`);
+      
     
         if (role === 'auditor' || asset.Owner === clientEnrollmentID) {
             return asset;
         } else {
             throw new Error('Access denied: You can only view your own assets');
         }
-    }
-    
-    
+    }  
 
 
     // Get All Assets - Only Auditors can view all assets
@@ -116,10 +107,7 @@ class AssetTransfer extends Contract {
         return role;
     }
 
-    // Get Client ID
-    getClientEnrollmentID(ctx) {
-        return ctx.clientIdentity.getID().split("::")[1];
-    }
+
 }
 
 module.exports = AssetTransfer;
