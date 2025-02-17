@@ -12,7 +12,7 @@ It includes admin, auditor, and regular user roles, ensuring access control over
 
 ## 📋 Prerequisites
 
-- Docker & Docker Compose
+- Docker
 - Node.js 
 - Hyperledger Fabric Binaries
 - Postman (for API testing)
@@ -44,6 +44,7 @@ This project implements a secure asset management system using Hyperledger Fabri
 2. **Set Up Network**
    ```bash
    cd Network
+   chmod +x startNetwork
    ./startNetwork.sh
    ```
 
