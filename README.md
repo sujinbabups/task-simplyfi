@@ -66,7 +66,7 @@ This project implements a secure asset management system using Hyperledger Fabri
 | Operation | Admin | Auditor | User |
 |-----------|-------|---------|------|
 | Create    | ✅    | ❌      | ❌   |
-| Read All  | ✅    | ✅      | ❌   |
+| Read All  | ❌    | ✅      | ❌   |
 | Read Own  | ✅    | ✅      | ✅   |
 | Update    | ✅    | ❌      | ❌   |
 | Delete    | ✅    | ❌      | ❌   |
