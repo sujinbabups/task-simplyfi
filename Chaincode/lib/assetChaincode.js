@@ -20,23 +20,35 @@ class AssetTransfer extends Contract {
     }
 
     //  Read an Asset - Auditors can read all assets, Users can only read their own
-    async ReadAsset(ctx, id) {
-        const assetBytes = await ctx.stub.getState(id);
-        if (!assetBytes || assetBytes.length === 0) {
-            throw new Error(`Asset ${id} not found`);
-        }
-    
-        const asset = JSON.parse(assetBytes.toString());
-        const role = await this.getClientRole(ctx);
-        const clientEnrollmentID = ctx.clientIdentity.getAttributeValue('hf.EnrollmentID');
-      
-    
-        if (role === 'auditor' || asset.Owner === clientEnrollmentID) {
-            return asset;
-        } else {
-            throw new Error('Access denied: You can only view your own assets');
-        }
-    }  
+ // Read an Asset - Auditors can read all assets, Users can only read their own
+async ReadAsset(ctx, id) {
+    const assetBytes = await ctx.stub.getState(id);
+    if (!assetBytes || assetBytes.length === 0) {
+        throw new Error(`Asset ${id} not found`);
+    }
+
+    const asset = JSON.parse(assetBytes.toString());
+    const role = await this.getClientRole(ctx);
+    const clientEnrollmentID = ctx.clientIdentity.getAttributeValue('hf.EnrollmentID');
+
+    console.log(`Asset ID: ${id}`);
+    console.log(`Stored Asset Owner: ${asset.Owner}`);
+    console.log(`Current User ID: ${clientEnrollmentID}`);
+    console.log(`User Role: ${role}`);
+
+    // Auditors can view all assets
+    if (role === 'auditor') {
+        return asset;
+    }
+
+    // Users can only view their own assets
+    if (asset.Owner === clientEnrollmentID) {
+        return asset;
+    } else {
+        throw new Error(`Access denied: You can only view your own assets. Current User: ${clientEnrollmentID}, Asset Owner: ${asset.Owner}`);
+    }
+}
+ 
 
 
     // Get All Assets - Only Auditors can view all assets
@@ -106,6 +118,19 @@ class AssetTransfer extends Contract {
         }
         return role;
     }
+
+    async GetClientInfo(ctx) {
+    const clientID = ctx.clientIdentity.getID();
+    const enrollmentID = ctx.clientIdentity.getAttributeValue('hf.EnrollmentID');
+    const mspID = ctx.clientIdentity.getMSPID();
+
+    return {
+        ClientID: clientID,
+        EnrollmentID: enrollmentID,
+        MSPID: mspID
+    };
+}
+
 
 
 }

@@ -6,10 +6,10 @@ userClient.submitTxn(
     "orgchannel",
     "Asset",
     "ReadAsset",
-    "Asset-200",
+    "Asset-100",
    ).then(result => {
     console.log(new TextDecoder().decode(result));
-    console.log(" Asset successfully created");
+    console.log(" Asset Details")
 }).catch(error => {
     console.error(" Failed to submit transaction:", error);
 });

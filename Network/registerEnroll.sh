@@ -47,7 +47,8 @@ function createOrg1() {
 
  echo "Registering a Regular User in Org1"
 
-fabric-ca-client register --caname ca-organization1 --id.name organization1user --id.secret organization1userpw  --id.type client  --id.attrs "role=user:ecert" --tls.certfiles "${PWD}/organizations/fabric-ca/organization1/ca-cert.pem"
+fabric-ca-client register --caname ca-organization1 --id.name organization1user --id.secret organization1userpw  --id.type useclient  --id.attrs "role=user:ecert" --tls.certfiles "${PWD}/organizations/fabric-ca/organization1/ca-cert.pem"
+  { set +x; } 2>/dev/null
 
 echo "Registering the Org1 Auditor"
 fabric-ca-client register --caname ca-organization1 --id.name organization1auditor --id.secret organization1auditorpw --id.type client --id.attrs "role=auditor:ecert" --tls.certfiles "${PWD}/organizations/fabric-ca/organization1/ca-cert.pem"
@@ -114,14 +115,16 @@ fabric-ca-client register --caname ca-organization1 --id.name organization1admin
 
   # Enroll user1
       echo "Enrolling a Regular User in Org1"
-   fabric-ca-client enroll -u https://organization1user:organization1userpw@localhost:7054  --caname ca-organization1 --tls.certfiles "${PWD}/organizations/fabric-ca/organization1/ca-cert.pem"  --mspdir "${PWD}/organizations/peerOrganizations/organization1.sample.com/users/User@organization1.sample.com/msp"  --enrollment.attrs "role"
+fabric-ca-client enroll -u https://organization1user:organization1userpw@localhost:7054 --caname ca-organization1  --tls.certfiles "${PWD}/organizations/fabric-ca/organization1/ca-cert.pem"  --mspdir "${PWD}/organizations/peerOrganizations/organization1.sample.com/users/User@organization1.sample.com/msp"  --enrollment.attrs "hf.EnrollmentID,role"
+     { set +x; } 2>/dev/null
+
 
   cp "${PWD}/organizations/peerOrganizations/organization1.sample.com/msp/config.yaml" \
      "${PWD}/organizations/peerOrganizations/organization1.sample.com/users/User@organization1.sample.com/msp/"
   # Enroll auditor
      echo "Enrolling the Org1 Auditor"
       set -x
-fabric-ca-client enroll -u https://organization1auditor:organization1auditorpw@localhost:7054 --caname ca-organization1 --tls.certfiles "${PWD}/organizations/fabric-ca/organization1/ca-cert.pem" --mspdir "${PWD}/organizations/peerOrganizations/organization1.sample.com/users/Auditor@organization1.sample.com/msp" --enrollment.attrs "role"
+fabric-ca-client enroll -u https://organization1auditor:organization1auditorpw@localhost:7054 --caname ca-organization1 --tls.certfiles "${PWD}/organizations/fabric-ca/organization1/ca-cert.pem" --mspdir "${PWD}/organizations/peerOrganizations/organization1.sample.com/users/Auditor@organization1.sample.com/msp" --enrollment.attrs "hf.EnrollmentID,role"
    { set +x; } 2>/dev/null
 
   cp "${PWD}/organizations/peerOrganizations/organization1.sample.com/msp/config.yaml" \
@@ -130,7 +133,7 @@ fabric-ca-client enroll -u https://organization1auditor:organization1auditorpw@l
   # Enroll org admin
     echo "Enrolling the Org1 Admin"
       set -x
-fabric-ca-client enroll -u https://organization1admin:organization1adminpw@localhost:7054 --caname ca-organization1 --tls.certfiles "${PWD}/organizations/fabric-ca/organization1/ca-cert.pem" --mspdir "${PWD}/organizations/peerOrganizations/organization1.sample.com/users/Admin@organization1.sample.com/msp" --enrollment.attrs "role"     
+fabric-ca-client enroll -u https://organization1admin:organization1adminpw@localhost:7054 --caname ca-organization1 --tls.certfiles "${PWD}/organizations/fabric-ca/organization1/ca-cert.pem" --mspdir "${PWD}/organizations/peerOrganizations/organization1.sample.com/users/Admin@organization1.sample.com/msp" --enrollment.attrs "hf.EnrollmentID,role"     
  { set +x; } 2>/dev/null
 
  cp "${PWD}/organizations/peerOrganizations/organization1.sample.com/msp/config.yaml" \
@@ -279,10 +282,6 @@ fabric-ca-client enroll -u https://organization2admin:organization2adminpw@local
   cp "${PWD}/organizations/peerOrganizations/organization2.sample.com/msp/config.yaml" \
      "${PWD}/organizations/peerOrganizations/organization2.sample.com/users/Admin@organization2.sample.com/msp/"
 }
-
-
-
-
 
 
 function createOrderer() {

@@ -1,0 +1,17 @@
+[
+    {
+        "assetId": "Asset-700",
+        "owner": "organization1user",
+        "value": 200
+    }
+    ,
+{
+    "assetId": "Asset-500",
+    "newOwner": "organization1user",
+    "newValue": "1000"
+  }
+
+
+
+]
+  

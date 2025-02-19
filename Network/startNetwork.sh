@@ -180,3 +180,13 @@ sleep 1
 
 
 peer lifecycle chaincode querycommitted --channelID $CHANNEL_NAME --name Asset --cafile $ORDERER_CA
+
+
+# invoke
+# peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.sample.com --tls --cafile "${PWD}/organizations/ordererOrganizations/sample.com/orderers/orderer.sample.com/msp/tlscacerts/tlsca.sample.com-cert.pem" -C orgchannel -n Asset --peerAddresses localhost:7051 --tlsRootCertFiles "${PWD}/organizations/peerOrganizations/organization1.sample.com/peers/peer0.organization1.sample.com/tls/ca.crt" --peerAddresses localhost:9051 --tlsRootCertFiles "${PWD}/organizations/peerOrganizations/organization2.sample.com/peers/peer0.organization2.sample.com/tls/ca.crt" -c '{"function":"CreateAsset","Args":["Asset-2","organization1","100"]}'
+# query
+# peer chaincode query -C orgchannel -n Asset -c '{"function":"GetAllAssets","Args":[]}'
+# peer chaincode query -C orgchannel -n Asset -c '{"function":"ReadAsset","Args":["Asset-200"]}'
+
+# peer chaincode query -C orgchannel -n Asset -c '{"function":"DeleteAsset","Args":["Asset-200"]}'
+

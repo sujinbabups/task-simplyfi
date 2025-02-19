@@ -18,7 +18,7 @@ class ClientApplication {
             }
     
             const wallet = await Wallets.newFileSystemWallet(this.walletPath);
-    
+            
             // Ensure user identity exists in the wallet
             const userIdentity = await wallet.get(org);
             if (!userIdentity) {
