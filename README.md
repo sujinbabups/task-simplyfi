@@ -12,7 +12,7 @@ It includes admin, auditor, and regular user roles, ensuring access control over
 
 ## 📋 Prerequisites
 
-- Docker & Docker Compose
+- Docker
 - Node.js 
 - Hyperledger Fabric Binaries
 - Postman (for API testing)
@@ -44,6 +44,7 @@ This project implements a secure asset management system using Hyperledger Fabri
 2. **Set Up Network**
    ```bash
    cd Network
+   chmod +x startNetwork
    ./startNetwork.sh
    ```
 
@@ -65,7 +66,7 @@ This project implements a secure asset management system using Hyperledger Fabri
 | Operation | Admin | Auditor | User |
 |-----------|-------|---------|------|
 | Create    | ✅    | ❌      | ❌   |
-| Read All  | ✅    | ✅      | ❌   |
+| Read All  | ❌    | ✅      | ❌   |
 | Read Own  | ✅    | ✅      | ✅   |
 | Update    | ✅    | ❌      | ❌   |
 | Delete    | ✅    | ❌      | ❌   |
@@ -90,18 +91,6 @@ node importIdentity.js
 # Check CA identities
 fabric-ca-client identity list --tls.certfiles organizations/fabric-ca/organization1/ca-cert.pem
 ```
-
-## 📜 License
-
-This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE.MD) file for details.
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
 
 ## ✨ Acknowledgments
 
